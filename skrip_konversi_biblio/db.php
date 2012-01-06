@@ -1,11 +1,12 @@
 <?php
 
-	$user = "root";
-	$pass = "hendros1d1kn1x";
+	$user = "dbuser2lontar";
+	$pass = "dbpassword";
 	$host = "127.0.0.1";
 
 	$db = "lontar_unri"; // database sumber (Lontar)
 
-	$db2 = "senayan"; // database tujuan (SLiMS)
+	$db2 = "senayandb"; // database tujuan (SLiMS)
+
 
 ?>
