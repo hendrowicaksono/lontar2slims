@@ -1,4 +1,5 @@
 <?php
+/* developed by Hendro Wicaksono */
 	
 	require("db.php");
 

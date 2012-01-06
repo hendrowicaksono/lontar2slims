@@ -1,4 +1,6 @@
 <?php
+
+/* developed by Indra Sutriadi */
 	
 	require("db.php");
 	require("csv.php");
