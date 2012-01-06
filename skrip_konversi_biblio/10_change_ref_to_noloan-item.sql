@@ -1,0 +1,1 @@
+UPDATE item SET item_status_id='NL' WHERE coll_type_id=9

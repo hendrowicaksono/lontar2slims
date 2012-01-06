@@ -1,0 +1,1 @@
+UPDATE item,biblio SET item.call_number=biblio.call_number WHERE biblio.biblio_id=item.biblio_id

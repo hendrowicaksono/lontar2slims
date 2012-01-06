@@ -1,0 +1,73 @@
+Tutorial Konversi Lontar UI ke SLiMS
+
+Persyaratan:
+- php5-cli, php5-mysqli
+- phpMyAdmin
+- pastikan punya akses ke database lontar dan slims
+
+# persiapan
+- masuk ke direktori ./script_lontar_slims
+- ubah konfigurasi berkas pada db.php dan csv.php (opsional)
+
+Pada berkas db.php, sesuaikan:
+	$user = "userdatabase";
+	$pass = "passworddatabase";
+	$host = "127.0.0.1";
+	$db = "lontar_unri"; // database sumber (Lontar)
+	$db2 = "senayan"; // database tujuan (SLiMS)
+
+# konversi data bibliography (tahap 1)
+- jalankan perintah:
+php 1_lontar_biblio-v1.php > biblio-v1.csv
+
+Outputnya akan disimpan ke file bernama "biblio-v1.csv"
+
+# Di data lontar nya UNRI karena masih ada pengisian yang menggunakan karakter "\n" 
+alias enter, seperti contoh dibawah ini:
+"Audio Visual Handbook";"Buku";"";"";"London : University of London 
+press, 1965";"";"118 hal: ill.: 21 cm";"";"340 Cab a";"English";"";"";"";"";"";"<Cable, Ralph>";"<Audio- Visual-Bahan dan perlengkapan>";"<121296>"
+
+yang pastinya akan mengakibatkan error jika diimpor ke SLiMS, maka perlu diperbaiki
+lagi dengan skrip berikutnya. Jalankan: 
+
+php 1_z_fix_bibliocsv.php > biblio-v2.csv
+
+File biblio format csv yang baru di simpan di file  biblio-v2.csv.
+
+Berikutnya 
+- masuk ke SLiMS > Bibliography > Import Data
+- sesuaikan parameter impor csv dengan apa yang ada di script csv.php (opsional)
+- upload berkas biblio-v2.csv untuk mulai mengimpor data
+NB: Jika datanya sudah besar, sangat dianjurkan untuk memecah2 dulu menjadi lebih
+kecil.
+
+Berikut, mengubah:
+- default nama Lokasi Perpustakaan dari "SL" ke "UPT". 
+- ubah coll_type_id menjadi 2 karena default koleksi nya buku (2)
+- mengubah lokasi perpustakaan menjadi UPT
+- meng-copy call number dari table biblio ke item (default)
+
+Melalui phpmyadmin, jalankan:
+UPDATE mst_location SET location_id='UPT' WHERE location_id='SL'
+UPDATE item SET coll_type_id=2
+UPDATE item SET location_id='UPT'
+UPDATE item,biblio SET item.call_number=biblio.call_number WHERE biblio.biblio_id=item.biblio_id
+
+Mengisi no classification dari no klas di tabel biblio, jalankan:
+php 6_php_setclassification-biblio.php
+
+memperbaiki penerbit, tempat terbit dan tahun terbit yang tidak konsisten diisi:
+php 7_php_fix_publisher-biblio.php
+
+membersihkan publisher yang sudah tidak terpakai:
+php 8_clean_publisher-v2.php
+
+membersihkan GMD id di database:
+php 9_opsional_migrate_to colltype-biblio_item.php
+
+mengubah status buku referens ke no loan (melalui phpmyadmin):
+UPDATE item SET item_status_id='NL' WHERE coll_type_id=9
+
+SELESAI
+
+

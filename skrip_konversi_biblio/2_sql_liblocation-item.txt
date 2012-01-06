@@ -1,0 +1,1 @@
+UPDATE mst_location SET location_id='UPT' WHERE location_id='SL'

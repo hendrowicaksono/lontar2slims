@@ -1,0 +1,1 @@
+UPDATE item SET coll_type_id=2

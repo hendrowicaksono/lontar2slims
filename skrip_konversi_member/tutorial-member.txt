@@ -1,0 +1,45 @@
+Tutorial Konversi Lontar UI ke SLiMS
+
+Persyaratan:
+- php5-cli, php5-mysqli
+- phpMyAdmin
+- pastikan punya akses ke database lontar dan slims
+
+# persiapan
+- masuk ke direktori ./script_lontar_slims
+- ubah konfigurasi berkas pada db.php dan csv.php (opsional)
+
+Pada berkas db.php, sesuaikan:
+	$user = "userdatabase";
+	$pass = "passworddatabase";
+	$host = "127.0.0.1";
+	$db = "lontar_unri"; // database sumber (Lontar)
+	$db2 = "senayan"; // database tujuan (SLiMS)
+
+# konversi data member
+- jalankan perintah
+php lontar_member.php > member-v1.csv
+php 1_z_fix_membercsv.php > member-v2.csv
+php 1_z_fix_membercsv-2.php > member-v3.csv
+
+- masuk ke SLiMS > Membership > Import Data
+- sesuaikan parameter impor csv dengan apa yang ada di script csv.php
+- upload berkas member-v3.csv untuk mulai mengimpor data
+NB: Jika datanya sudah besar, sangat dianjurkan untuk memecah2 dulu menjadi lebih
+kecil.
+
+Catatan:
+- Untuk mempermudah impor data csv, pecah berkas menjadi lebih kecil.
+- Pada bibliography, agar mudah supaya gunakan tanda titik-koma sebagai
+  separator daripada menggunakan tanda koma.
+
+
+# konversi data sirkulasi (OPSIONAL DAN MASIH DIRASA GAGAL. SILAHKAN GUNAKAN TAPI RESIKO TANGGUNG SENDIRI)
+- buka berkas 2_lontar_circ.sql
+- ubah nama database `from` dan `to` menjadi nama database sebenarnya
+- `from` = db asal yg merupakan db lontar
+- `to` = db tujuan yg merupakan db slims
+- jalankan berkas lontar_circ.sql dari command line atau impor via PMA
+
+Catatan:
+Beberapa data akan terlihat kosong walaupun tercatat dalam sirkulasi.
